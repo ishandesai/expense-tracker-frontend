@@ -8,6 +8,9 @@ const ExpenseList = ({ expenses, deleteExpense, editExpense }) => {
   const [category, setCategory] = useState('');
   const [date, setDate] = useState('');
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const expensesPerPage = 5;
+
   const startEditing = (expense) => {
     setEditing(expense.id);
     setDescription(expense.description);
@@ -23,6 +26,12 @@ const ExpenseList = ({ expenses, deleteExpense, editExpense }) => {
 
   const totalExpense = expenses.reduce((total, expense) => total + expense.amount, 0);
 
+  const indexOfLastExpense = currentPage * expensesPerPage;
+  const indexOfFirstExpense = indexOfLastExpense - expensesPerPage;
+  const currentExpenses = expenses.slice(indexOfFirstExpense, indexOfLastExpense);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className="bg-white p-4 rounded-lg shadow-lg">
       <h3 className="text-xl font-bold mb-4">Expenses</h3>
@@ -31,7 +40,7 @@ const ExpenseList = ({ expenses, deleteExpense, editExpense }) => {
       ) : (
         <>
           <ul>
-            {expenses.map((expense) => (
+            {currentExpenses.map((expense) => (
               <li key={expense.id} className="border-b border-gray-200 py-2">
                 {editing === expense.id ? (
                   <div>
@@ -89,8 +98,19 @@ const ExpenseList = ({ expenses, deleteExpense, editExpense }) => {
               </li>
             ))}
           </ul>
-          <div className="mt-4">
+          <div className="flex justify-between items-center mt-4">
             <h4 className="text-lg font-bold">Total Expense: ${totalExpense.toFixed(2)}</h4>
+            <div className="flex space-x-2">
+              {[...Array(Math.ceil(expenses.length / expensesPerPage)).keys()].map((number) => (
+                <button
+                  key={number}
+                  onClick={() => paginate(number + 1)}
+                  className={`px-3 py-1 rounded ${currentPage === number + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                >
+                  {number + 1}
+                </button>
+              ))}
+            </div>
           </div>
         </>
       )}

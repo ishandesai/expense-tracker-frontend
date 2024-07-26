@@ -1,13 +1,16 @@
 // src/pages/Signup.js
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { register } = useContext(UserContext);
 
   const handleSignup = async (e) => {
     e.preventDefault();
     // Perform signup logic
+    register({ username: 'JohnDoe' }); // Example username
     navigate('/');
   };
 

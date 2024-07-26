@@ -1,13 +1,16 @@
 // src/pages/Login.js
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useContext(UserContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     // Perform login logic
+    login({ username: 'JohnDoe' }); // Example username
     navigate('/');
   };
 
